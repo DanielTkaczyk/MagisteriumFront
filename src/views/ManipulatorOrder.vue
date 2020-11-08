@@ -1,10 +1,31 @@
 <template>
   <div>
     <div v-if="!latestData">
-      <spinner></spinner>
+      <div v-if="manipulatorData.success">
+        <b-jumbotron style="height: 320px;">
+          <template #header
+            ><b-button v-b-modal.modal-1 style="margin-top:45px;"
+              >Wybierz zlecenie</b-button
+            >
+            <b-modal id="modal-1" title="Lista zleceń" hide-footer>
+              <b-list-group
+                v-for="item in manipulatorData.resultObject"
+                :key="item.id"
+              >
+                <b-list-group-item
+                  class="listElement"
+                  :style="isChecked(item.id)"
+                  @click="changeLatestObject(item.id)"
+                  >{{ item.orderName }}</b-list-group-item
+                >
+              </b-list-group>
+            </b-modal></template
+          >
+        </b-jumbotron>
+      </div>
     </div>
     <div v-else>
-      <div class="center grey">
+      <div class="center" :style="getBackground(latestData.isActive)">
         <b-jumbotron
           v-if="wsData.controlState === 0"
           id="max-1600"
@@ -14,7 +35,7 @@
         </b-jumbotron>
         <b-jumbotron
           v-else
-          :style="getBackground(latestData.isActive)"
+          style="background-color: transparent;"
           id="max-1600"
         >
           <template #header>{{
@@ -291,13 +312,9 @@
 import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import { HubConnectionBuilder, LogLevel } from '@aspnet/signalr';
-import Spinner from '../components/Spinner';
 import { WSURL } from '../axios';
 export default {
   name: 'ManipulatorOrder',
-  components: {
-    Spinner,
-  },
   created() {
     this.fetchManipulatorOrders();
     this.fetchLatestManipulatorOrder();
@@ -337,19 +354,28 @@ export default {
       fetchManipulatorOrders: 'manipulator/fetchManipulatorOrders',
     }),
     isChecked(id) {
-      if (id === this.latestData.manipulatorOrder.id) {
+      if (
+        this.latestData &&
+        id === this.latestData.manipulatorOrder.id
+      ) {
         return 'background-color: #e9ecef;';
+      } else if (
+        this.manipulatorData &&
+        id === this.manipulatorData.id
+      ) {
+        return 'background-color: #e9ecef;';
+      } else {
+        return '';
       }
-      return '';
     },
     getData(data) {
       return moment(data).format('DD.MM.YYYY, HH:mm');
     },
     getBackground(bool) {
       if (bool) {
-        return 'background-color: rgba(155, 248, 121, 0.196);';
+        return 'background-color: rgba(155, 248, 121, 0.396);';
       } else {
-        return '';
+        return 'background-color: #e9ecef';
       }
     },
     getMinutes() {
@@ -511,5 +537,8 @@ body {
 }
 .big-btn {
   height: 80px;
+}
+tr {
+  text-align: center;
 }
 </style>

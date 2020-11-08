@@ -158,7 +158,7 @@ const actions = {
       });
     }
   },
-  async addManipulatorOrder({ commit }, data) {
+  async addManipulatorOrder({ commit, dispatch }, data) {
     const config = {
       headers: { Authorization: `Bearer ${getToken()}` },
     };
@@ -174,6 +174,7 @@ const actions = {
           success: true,
           error: false,
         });
+        dispatch('fetchManipulatorOrders');
       } else {
         console.log(res);
         throw Error(res.data.description);

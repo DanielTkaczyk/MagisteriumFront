@@ -18,7 +18,7 @@
               type="text"
               class="form-control"
               id="name"
-              placeholder="name"
+              placeholder="login"
             />
             <i class="fas fa-user"></i>
           </div>

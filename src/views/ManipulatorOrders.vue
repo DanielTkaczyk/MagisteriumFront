@@ -69,8 +69,8 @@
             <b-button
               class="add-submit-button"
               type="submit"
-              variant="light"
-              >Zatwierdź formularz!</b-button
+              variant="success"
+              >Dodaj!</b-button
             >
           </b-form>
         </div>
@@ -158,6 +158,7 @@ export default {
         Manipulations: this.Manipulations,
         TargetAmount: this.TargetAmount,
       });
+      this.hideModal();
     },
     handleDeleteManipulatorOrder(e, id) {
       e.preventDefault();
